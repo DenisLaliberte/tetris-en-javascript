@@ -47,7 +47,7 @@ tableauStyle[3] = "jaune";
 var tableauBloc = new Array(10,10);
 
 //je ne suis pas sur s'il faut initialiser un array.... !!!!!!!!!!!!!!?!?!?!?!
-//mais ça bugais avant que je le fasse, à confirmer avec Fred
+//mais ça bugais avant que je le fasse
 for (var i = 0;i<NOMBRE_LIGNE_MAX+1;i++){
 	tableauBloc[i]=new Array();
 	for (var j = 0;j<NOMBRE_COLONNE;j++){
@@ -185,8 +185,8 @@ function Bloc(id){
 	this.y = 10;
 	this.nouveauX = 0;
 	this.vitesse = 1;
-	this.couleur = Math.round((Math.random() * 3));
-	this.style = tableauStyle[this.couleur];
+	this.couleur = Math.round((Math.random() * 3) );
+        this.style = tableauStyle[this.couleur];
 	this.colonne = NOMBRE_COLONNE/2;
 	console.log("initialisation du bloc : "+id
 			+"couleur : "+this.couleur
@@ -196,14 +196,14 @@ function Bloc(id){
 				+"'class='bloc "
 				+this.style+"' ></div>") );
 	this.div = document.getElementById(this.idCSS);
-	this.xCourant =parseInt(this.div.offSetLeft) + POSITION_DEPART;
-	//ici je ne comprend pas le bug du tout... la variable position depart est un int
-	// le offsetleft je le converti en int, mais la variable this.xCourant continue
-	//de lever une erreur NaN
+        this.xCourant =parseInt(this.div.offsetLeft) + POSITION_DEPART;
 	console.log("Bloc()initialisation POSITION_DEPART"+POSITION_DEPART);
 	console.log("Bloc() initialisation this.div.offsetLeft"+parseInt(this.div.offsetLeft));
 	console.log("Bloc() initialisation this.xCourant : " + this.xCourant );
 	this.div.style.left = this.xCourant + "px";
+
+	console.log("Bloc() initialisation this.div.offsetLeft"+parseInt(this.div.offsetLeft));
+
 	this.tic = function() {
 	//fonction qui gere le rythme de l'annimation du bloc
 		

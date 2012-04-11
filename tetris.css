@@ -10,22 +10,28 @@ body{
 	height : 600;
 	margin : auto;
 }
+.bloc{
+        width:40;
+        height:40;
+        display:block;
+        position:relative;
+}
 
-#bleu {
+.bleu {
+        background-color :blue;
+}   
+
+.rouge{
+        background-color:red;
 
 }
 
-#rose{
-
-
-}
-
-#vert{
-
+.vert{
+        background-color:green;
 
 }
 
-#jaune{
-
+.jaune{
+        background-color:yellow;
 
 }
