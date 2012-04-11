@@ -28,22 +28,12 @@ var PLANCHER = 580;
 var NOMBRE_COLONNE = 10;
 var DIMENSION_BLOC = 40;
 var LIMITTE_GAUCHE =0;
-var POSITION_DEPART =Math.round( (NOMBRE_COLONNE/2)*DIMENSION_BLOC);
 var LIMITTE_DROITE =LIMITTE_GAUCHE + (10 * DIMENSION_BLOC);
 var NOMBRE_BLOC_LIGNE = 3;
 
-var BLEU = 0;
-var VERT = 1;
-var ROUGE = 2;
-var JAUNE = 3;
 
 //variables
 var gameOver = false ;
-var tableauStyle = new Array();
-tableauStyle[0] = "bleu";
-tableauStyle[1] = "vert";
-tableauStyle[2] = "rouge";
-tableauStyle[3] = "jaune";
 var tableauBloc = new Array(10,10);
 
 //je ne suis pas sur s'il faut initialiser un array.... !!!!!!!!!!!!!!?!?!?!?!
@@ -98,6 +88,7 @@ function tic(){
 		var ligne = tableauPlancher[colonne];
 		console.log("tic() ligne");
 		tableauBloc[ligne][colonne] = blocActif;
+
 
 		// vérifier s'il y a des lignes qui se sont complété
 		for(var i=0;i<10;i++){
@@ -172,82 +163,4 @@ function touche(evenement){
 function relache(){
 	direction=0;
 	if(acceleration)acceleration=false;
-}
-
-/* ********** ********** ********** ********** ********** ********** ********** */
-				//objet bloc
-/* ********** ********** ********** ********** ********** ********** ********** */
-function Bloc(id){
-	//initialisation
-	this.actif=true;
-	this.id=id;
-	this.idCSS="bloc"+id;
-	this.y = 10;
-	this.nouveauX = 0;
-	this.vitesse = 1;
-	this.couleur = Math.round((Math.random() * 3) );
-        this.style = tableauStyle[this.couleur];
-	this.colonne = NOMBRE_COLONNE/2;
-	console.log("initialisation du bloc : "+id
-			+"couleur : "+this.couleur
-			+"style : " +this.style);
-	//creer le div et en garder une référence
-	$("#jeu").append( $("<div id='"+this.idCSS
-				+"'class='bloc "
-				+this.style+"' ></div>") );
-	this.div = document.getElementById(this.idCSS);
-        this.xCourant =parseInt(this.div.offsetLeft) + POSITION_DEPART;
-	console.log("Bloc()initialisation POSITION_DEPART"+POSITION_DEPART);
-	console.log("Bloc() initialisation this.div.offsetLeft"+parseInt(this.div.offsetLeft));
-	console.log("Bloc() initialisation this.xCourant : " + this.xCourant );
-	this.div.style.left = this.xCourant + "px";
-
-	console.log("Bloc() initialisation this.div.offsetLeft"+parseInt(this.div.offsetLeft));
-
-	this.tic = function() {
-	//fonction qui gere le rythme de l'annimation du bloc
-		
-		if(direction!=0){		
-		//deplacement horizontal
-			this.xCourant = this.div.offsetLeft;
-			this.nouveauX = this.xCourant +( DIMENSION_BLOC * direction);
-			
-			if(this.nouveauX > LIMITTE_GAUCHE 
-				&& this.nouveauX < LIMITTE_DROITE){
-				this.div.style.left = this.nouveauX + "px";
-				this.colonne +=direction;
-				console.log("bloc deplacement this.colonne"+this.colonne);
-			}
-		}
-		//rotation du bloc
-		if(rotation){
-			console.log("rotation");
-			rotation = false ;
-		}
-		if(!acceleration){
-			this.vitesse=1;
-		}
-		else {
-			this.vitesse=5;
-		}
-		
-		//deplacement vertical
-		this.y+=this.vitesse;
-		this.div.style.top = this.y + "px";	
-		
-		//validation arret
-		
-		//calcul du plancher de la colonne que le bloc descend
-		var plancherColonne = PLANCHER -( tableauPlancher[this.colonne]*DIMENSION_BLOC);	
-		if( this.y >plancherColonne ){
-			console.log("Bloc() plancherClonne atteint"+tableauPlancher[this.colonne]);
-			this.actif = false;
-			tableauPlancher[this.colonne]+=1;
-			if(tableauPlancher[this.colonne] > NOMBRE_LIGNE_MAX){
-				console.log("Bloc() validationArret GAMEOVER")
-				gameOver = true;
-			}
-		}
-		
-	}
 }
