@@ -43,7 +43,7 @@ function Jeu(){
         return blocActif;
     }
     this.ajoutBloc = function() {
-        blocActif.ligne = tableauPlancher[blocActif.colonne];
+        blocActif.ligne =this.tableauPlancher[blocActif.colonne];
         tableauBloc[blocActif.ligne][blocActif.colonne] = blocActif;
     }
     this.verifierLigne = function() {
