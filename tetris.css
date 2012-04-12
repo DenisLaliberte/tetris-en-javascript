@@ -5,16 +5,19 @@ body{
 }
 
 #jeu{
+        position:absolute;
 	background-color : white;
-	width : 400;
+	width : 800;
 	height : 600;
-	margin : auto;
+        top:10;
+        left:100;
 }
 .bloc{
-        width:40;
-        height:40;
-        display:block;
-        position:relative;
+        position:absolute;
+        left:360;
+        top:10;
+        width:80;
+        height:80;
 }
 
 .bleu {

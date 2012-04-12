@@ -13,25 +13,25 @@ tableauStyle[0] = "bleu";
 tableauStyle[1] = "vert";
 tableauStyle[2] = "rouge";
 tableauStyle[3] = "jaune";
-var DIMENSION_BLOC = 40; //dimension largeur et hauteur d'un bloc, en px 
+var DIMENSION_BLOC = 80; //dimension largeur et hauteur d'un bloc, en px 
 var NOMBRE_BLOC_LIGNE = 3; //nombre de bloc pour faire une ligne valide
 var LIMITTE_GAUCHE =100;
 var LIMITTE_DROITE =900;
 var NOMBRE_LIGNE_MAX = 14;
-var PLANCHER = 580;
+var PLANCHER = 610;
 var NOMBRE_COLONNE = 10;
 console.log("bloc est loade")
 function Jeu(){
     var idBloc = 0;
     var blocActif;
     this.tableauPlancher = new Array();
-    var tableauBloc = new Array(10,10);
+    this.tableauBloc = new Array(10,10);
     // TODO: a tester plus tard, je ne suis pas sur s'il faut initialiser un array
     //mais ça bugais avant que je le fasse
     for (var i = 0;i<NOMBRE_LIGNE_MAX+1;i++){
-        tableauBloc[i]=new Array();
+        this.tableauBloc[i]=new Array();
     	for (var j = 0;j<NOMBRE_COLONNE;j++){
-    		tableauBloc[i][j]=0;
+    		this.tableauBloc[i][j]=0;
 	}
     }
     for (var i=0;i<NOMBRE_COLONNE;i++){
@@ -44,12 +44,12 @@ function Jeu(){
     }
     this.ajoutBloc = function() {
         blocActif.ligne =this.tableauPlancher[blocActif.colonne];
-        tableauBloc[blocActif.ligne][blocActif.colonne] = blocActif;
+        this.tableauBloc[blocActif.ligne][blocActif.colonne] = blocActif;
     }
     this.verifierLigne = function() {
         for(var i=0;i<10;i++){
 	    for(var j;j<10;j++){
-	        var retour = tableauBloc[i][j].validerLigne(0);	
+	        var retour = this.tableauBloc[i][j].validerLigne(0);	
 		//TODO : faire la même choses pour les colonnes
 	    }
 	}
@@ -77,8 +77,6 @@ function Bloc(id,jeu){
 				+"'class='bloc "
 				+this.style+"' ></div>") );
 	this.div = document.getElementById(this.idCSS);
-        this.xCourant =parseInt(this.div.offsetLeft) + POSITION_DEPART;
-	this.div.style.left = this.xCourant + "px";
 
     this.tic = function() {
     //fonction qui gere le rythme de l'annimation du bloc
@@ -151,7 +149,7 @@ function Bloc(id,jeu){
 	if(nombreARetirer > 0){
 		//on retire le div du html et l'objet du tableau
 		$("#"+id).remove();
-		tableauBloc[ligne].splice(colonne,1);
+		this.tableauBloc[ligne].splice(colonne,1);
 		nombreARetirer--;
 		return nombreARetirer;
 	}
