@@ -18,7 +18,7 @@ var NOMBRE_BLOC_LIGNE = 3; //nombre de bloc pour faire une ligne valide
 var LIMITTE_GAUCHE =100;
 var LIMITTE_DROITE =900;
 var NOMBRE_LIGNE_MAX = 14;
-var PLANCHER = 610;
+var PLANCHER = 520;
 var NOMBRE_COLONNE = 10;
 console.log("bloc est loade")
 function Jeu(){
@@ -84,13 +84,13 @@ function Bloc(id,jeu){
     	if(this.direction!=0){		
     	//deplacement horizontal
 	    this.xCourant = this.div.offsetLeft;
-            this.nouveauX = this.xCourant +( DIMENSION_BLOC * direction);
+            this.nouveauX = this.xCourant +( DIMENSION_BLOC *this.direction);
 			
 	    if(this.nouveauX > LIMITTE_GAUCHE 
 		&& this.nouveauX < LIMITTE_DROITE){
 		
                 this.div.style.left = this.nouveauX + "px";
-		this.colonne +=direction;
+		this.colonne +=this.direction;
 //debug :
                 console.log("bloc deplacement this.colonne"+this.colonne);
 	    }

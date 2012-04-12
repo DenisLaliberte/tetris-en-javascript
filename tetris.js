@@ -88,5 +88,5 @@ function touche(evenement){
 }
 function relache(){
     blocActif.direction=0;
-    if(acceleration)blocActif.acceleration=false;
+    if(blocActif.acceleration)blocActif.acceleration=false;
 }
