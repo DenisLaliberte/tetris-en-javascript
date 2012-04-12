@@ -1,9 +1,6 @@
-
 /* ********** ********** ********** ********** ********** ********** ********** */
 				//objet bloc et jeu
 /* ********** ********** ********** ********** ********** ********** ********** */
-
-var POSITION_DEPART =460;
 var BLEU = 0;
 var VERT = 1;
 var ROUGE = 2;
@@ -14,13 +11,13 @@ tableauStyle[1] = "vert";
 tableauStyle[2] = "rouge";
 tableauStyle[3] = "jaune";
 var DIMENSION_BLOC = 80; //dimension largeur et hauteur d'un bloc, en px 
-var NOMBRE_BLOC_LIGNE = 3; //nombre de bloc pour faire une ligne valide
-var LIMITTE_GAUCHE =100;
-var LIMITTE_DROITE =900;
-var NOMBRE_LIGNE_MAX = 14;
+var NOMBRE_BLOC_LIGNE = 4; //nombre de bloc pour faire une ligne valide
+var LIMITTE_GAUCHE =-5;
+var LIMITTE_DROITE =725;
+var COLONNE_DEPART = 4;
+var NOMBRE_LIGNE_MAX = 7;
 var PLANCHER = 520;
 var NOMBRE_COLONNE = 10;
-console.log("bloc est loade")
 function Jeu(){
     var idBloc = 0;
     var blocActif;
@@ -48,30 +45,51 @@ function Jeu(){
     }
     this.verifierLigne = function() {
         for(var i=0;i<10;i++){
-	    for(var j;j<10;j++){
-	        var retour = this.tableauBloc[i][j].validerLigne(0);	
+	    for(var j=0;j<10;j++){
+                //if(this.tableauBloc[i][j] != 0 ){
+	        // todo fonction à debuger var retour = this.tableauBloc[i][j].validerLigne(0);	
 		//TODO : faire la même choses pour les colonnes
 	    }
-	}
+        }
+    }
+    
+    this.finPartie = function(){
+//debug :
+        console.log("finpartie");
+        //retire tout les blocs a la fin d'une partie
+        for(var i=0;i<10;i++){
+	    for(var j=0;j<10;j++){
+                console.log("retirer"+i+j)
+                this.tableauBloc[i][j].retirer();	
+	    }
+        }
+        $("#gameOver").remove();
+        initialisation();
     }
 }
 
 function Bloc(id,jeu){
 	//initialisation
 	this.actif=true;
+
 	this.id=id;
-        this.jeu=jeu;
 	this.idCSS="bloc"+id;
+        this.jeu=jeu;
+
 	this.y = 10;
 	this.nouveauX = 0;
-	this.vitesse = 1;
-	this.couleur = Math.round((Math.random() * 3) );
-        this.style = tableauStyle[this.couleur];
-	this.colonne = NOMBRE_COLONNE/2;
+        this.colonne = COLONNE_DEPART;
         this.ligne = 0;
+        
+	this.vitesse = 1;
         this.direction=0;
         this.rotation = false;
         this.acceleration = false;
+	
+        this.couleur = Math.round((Math.random() * 3) );
+        this.style = tableauStyle[this.couleur];
+	
+        
 	//creer le div et en garder une référence
 	$("#jeu").append( $("<div id='"+this.idCSS
 				+"'class='bloc "
@@ -91,8 +109,6 @@ function Bloc(id,jeu){
 		
                 this.div.style.left = this.nouveauX + "px";
 		this.colonne +=this.direction;
-//debug :
-                console.log("bloc deplacement this.colonne"+this.colonne);
 	    }
 	}
 	//rotation du bloc
@@ -102,21 +118,20 @@ function Bloc(id,jeu){
             rotation = false ;
 	}
 
+	//deplacement vertical
         if(!this.acceleration){
             this.vitesse=1;
 	}
 	else {
             this.vitesse=5;
 	}
-	//deplacement vertical
     	this.y+=this.vitesse;
 	this.div.style.top = this.y + "px";	
-    	//validation arret
-		
+    	
+        //validation arret	
 	//calcul du plancher de la colonne que le bloc descend
 	var plancherColonne = PLANCHER -( this.jeu.tableauPlancher[this.colonne]*DIMENSION_BLOC);	
 	if( this.y >plancherColonne ){
-	    console.log("Bloc() plancherClonne atteint"+this.jeu.tableauPlancher[this.colonne]);
 	    this.actif = false;
 	    this.jeu.tableauPlancher[this.colonne]+=1;
 	    if(this.jeu.tableauPlancher[this.colonne] > NOMBRE_LIGNE_MAX){
@@ -126,16 +141,19 @@ function Bloc(id,jeu){
     	}
 		
     }
-    function validerLigne(compteur){
+    this.validerLigne = function(compteur){
     /*valide pour un bloc si les suivants sur la lignes sont de la même couleur
     s'il y en as plus de 3 en ligne ils sont tous retiré. la fonction retourne le
     nombre de bloc à retirer*/
 	var suivante = this.colone+1;
-	if(this.couleur == this.jeu.tableau[this.ligne][suivante].couleur) {
+	
+        if(this.jeu.tableauBloc[this.ligne][suivante] != 0){
+            if(this.couleur == this.jeu.tableauBloc[this.ligne][suivante].couleur) {
 	//si le bloc suivant est de la même couleur on avance et on compte
-	    compteur++;
-            var nombreARetirer = this.jeu.tableau[this.ligne][suivante].validerLigne(compteur);
-	}
+	        compteur++;
+                var nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
+	    }
+        }
 	else if(compteur < NOMBRE_BLOC_LIGNE ){
 	//si le bloc suivant n'est pas de la même couleur et qu'on en as compté
 	//moins de 3 on retourne 0 bloc à retirer 
@@ -156,5 +174,9 @@ function Bloc(id,jeu){
 	else{
 	 return 0;
 	}
+    }
+    this.retirer = function(){
+        console.log("retire"+this.idCSS)
+        this.div.remove();
     }
 }

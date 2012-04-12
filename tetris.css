@@ -12,9 +12,14 @@ body{
         top:10;
         left:100;
 }
+#gameOver{
+        font-size:100px;
+        margin:auto;
+
+}
 .bloc{
         position:absolute;
-        left:360;
+        left:320;
         top:10;
         width:80;
         height:80;

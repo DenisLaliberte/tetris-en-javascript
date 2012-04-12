@@ -4,7 +4,6 @@
 /*
 todo :
 - faire un gros div game over
--position de départ
 -tester la fonction qui fait les bloques arrêtes 
 -tester la fonction qui retire les blocs lorsqu'il y a une ligne
 -faire des forme complexe (l t o)
@@ -22,7 +21,9 @@ window.onload = initialisation;
 
 function initialisation(){
 //initialisation du jeu et de ses variables
-    
+    gameOver = false;    
+//debug :
+        console.log("initialisation")
     //initialisation du jeu
     jeu = new Jeu();
 
@@ -60,9 +61,8 @@ function tic(){
 	    setTimeout(tic,30);
 	}
 	else{
-		console.log("gameover !!!!!")
-		//faire une fonction qui affiche un div gameover pendand 
-		//15 secondes puis qui rapelle initialisation
+	    $("#jeu").append( $("<div id='gameOver' >GAME OVER</div>") );
+            setTimeout(jeu.finPartie,10000)
 	}
 }
 /* ********** ********** ********** ********** ********** ********** ********** */
@@ -78,8 +78,6 @@ var TOUCHE_DROITE = 39;
 var TOUCHE_HAUT = 38;
 var TOUCHE_BAS = 40; 
 function touche(evenement){
-//debug
-    console.log("touche");	
     this.code = evenement.which;
     if(this.code == TOUCHE_GAUCHE) blocActif.direction = GAUCHE ;
     else if(this.code == TOUCHE_DROITE) blocActif.direction = DROITE;
