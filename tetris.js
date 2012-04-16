@@ -3,14 +3,11 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
 /*
 todo :
-- faire un gros div game over
--tester la fonction qui fait les bloques arrêtes 
--tester la fonction qui retire les blocs lorsqu'il y a une ligne
--faire des forme complexe (l t o)
--valider les colonnes
--faire descendres les bloc s'il n'y en as plus en dessous
--ajuster les paramêtres
+-debuger la fonction qui commence une nouvelle partie
 -clean up commentaire et console.log
+
+-faire une branche pour dr mario
+
 */
 
 //variables
@@ -61,7 +58,8 @@ function tic(){
 	    setTimeout(tic,30);
 	}
 	else{
-	    $("#jeu").append( $("<div id='gameOver' >GAME OVER</div>") );
+	    console.log("tic() game over")
+            $("#jeu").append( $("<div id='gameOver' >GAME OVER</div>") );
             setTimeout(jeu.finPartie,10000)
 	}
 }
