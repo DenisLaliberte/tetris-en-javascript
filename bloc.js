@@ -1,11 +1,12 @@
 
 /* ********** ********** ********** ********** ********** ********** ********** */
-                                //objet bloc et jeu
+                                //objet bloc
 /* ********** ********** ********** ********** ********** ********** ********** */
 var BLEU = 0;
 var VERT = 1;
 var ROUGE = 2;
 var JAUNE = 3;
+var COLONNE_DEPART = 4;
 var tableauStyle = new Array();
 tableauStyle[0] = "bleu";
 tableauStyle[1] = "vert";
@@ -23,7 +24,7 @@ function Bloc(id,jeu){
 
 	this.y = 10;
 	this.nouveauX = 0;
-        this.colonne = COLONNE_DEPART;
+        this.colonne =  COLONNE_DEPART ;
         this.ligne = 0;
         
 	this.vitesse = 1;
@@ -53,7 +54,9 @@ function Bloc(id,jeu){
 		&& this.nouveauX < LIMITTE_DROITE){
 		
                 this.div.style.left = this.nouveauX + "px";
-		this.colonne +=this.direction;
+
+if(DEBUG)       console.log("bloc || tic() colonne "+this.colonne)
+                this.colonne +=this.direction;
 	    }
 	}
 	//rotation du bloc
@@ -90,14 +93,17 @@ function Bloc(id,jeu){
     /*valide pour un bloc si les suivants sur la lignes sont de la même couleur
     s'il y en as plus de 3 en ligne ils sont tous retiré. la fonction retourne le
     nombre de bloc à retirer*/
-	var suivante = this.colone+1;
-	
-        if(this.jeu.tableauBloc[this.ligne][suivante] != 0){
-            if(this.couleur == this.jeu.tableauBloc[this.ligne][suivante].couleur) {
-	//si le bloc suivant est de la même couleur on avance et on compte
+        
+        var suivante = this.colonne+1;
+        var nombreARetirer
+if(DEBUG){
+        console.log("bloc ||valider compteur"+compteur);
+        console.log("bloc || valider ligne" +this.ligne + this.colonne);
+        console.log("bloc || objet suivant : "+suivante+ this.jeu.tableauBloc[this.ligne][suivante])
+}
+        if( this.jeu.tableauBloc[this.ligne][suivante]!= 0){
 	        compteur++;
-                var nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
-	    }
+                nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
         }
 	else if(compteur < NOMBRE_BLOC_LIGNE ){
 	//si le bloc suivant n'est pas de la même couleur et qu'on en as compté
@@ -107,12 +113,13 @@ function Bloc(id,jeu){
 	else{
 	//si on as compté plus de trois bloc de même couleur on incrémente le compteur	
 	//et on l'assigne aux blos à retirer
-		nombreARetirer = compteur++;
+		nombreARetirer = compteur+2;
 	}
 	if(nombreARetirer > 0){
 		//on retire le div du html et l'objet du tableau
-		$("#"+id).remove();
-		this.tableauBloc[ligne].splice(colonne,1);
+if(DEBUG)   console.log("bloc ||valider ligne nombreARetirer"+nombreARetirer)
+                $("#"+this.idCSS).remove();
+		this.jeu.tableauBloc[this.ligne][this.colonne]=0;
 		nombreARetirer--;
 		return nombreARetirer;
 	}
@@ -120,8 +127,7 @@ function Bloc(id,jeu){
 	 return 0;
 	}
     }
-    this.retirer = function(){
-        console.log("retire"+this.idCSS)
-        this.div.remove();
-    }
 }
+
+
+

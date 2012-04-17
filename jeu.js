@@ -2,14 +2,15 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
                                 //objet jeu
 /* ********** ********** ********** ********** ********** ********** ********** */
-var NOMBRE_BLOC_LIGNE = 4; //nombre de bloc pour faire une ligne valide
+var DEBUG = true;
 var LIMITTE_GAUCHE =-5;
 var LIMITTE_DROITE =725;
-var COLONNE_DEPART = 4;
 //TODO : changer la validation pour remmetre 7
-var NOMBRE_LIGNE_MAX = 3;
+var NOMBRE_LIGNE_MAX = 10;
 var PLANCHER = 520;
 var NOMBRE_COLONNE = 10;
+var NOMBRE_BLOC_LIGNE = 3 // pour qu'une ligne soit retirer elle doit être
+//complete
 function Jeu(){
     var idBloc = 0;
     var blocActif;
@@ -19,30 +20,41 @@ function Jeu(){
     //mais ça bugais avant que je le fasse
     for (var i = 0;i<NOMBRE_LIGNE_MAX+1;i++){
         this.tableauBloc[i]=new Array();
-    	for (var j = 0;j<NOMBRE_COLONNE;j++){
+    	for (var j = 0;j<NOMBRE_COLONNE+1;j++){
+            //on ajoute 1 au nombre de colonne pour grader une colonne vide en
+            //dehors du tableau qui sert à la validation des lignes
     		this.tableauBloc[i][j]=0;
 	}
     }
     for (var i=0;i<NOMBRE_COLONNE;i++){
 	this.tableauPlancher[i]=0;
     }
+
     this.nouveauBloc = function() {
+    //fonction pour ajouter un nouveau bloc au jeu, retourne une reference 
         blocActif = new Bloc(idBloc,this);
         idBloc++;
         return blocActif;
     }
     this.ajoutBloc = function() {
+    //lorsqu'un bloc a fini sa desente, il est ajoute au tableau des blocs
+    //affiche
+//DEBUG :
+        console.log("insertion du bloc " + blocActif.id + " ligne :" +
+        blocActif.ligne +"colonne"+blocActif.colonne)
         blocActif.ligne =this.tableauPlancher[blocActif.colonne];
         this.tableauBloc[blocActif.ligne][blocActif.colonne] = blocActif;
     }
     this.verifierLigne = function() {
  
         for(var i=0;i<10;i++){
-	    for(var j=0;j<10;j++){
-                //if(this.tableauBloc[i][j] != 0 ){
-	        // todo fonction à debuger var retour = this.tableauBloc[i][j].validerLigne(0);	
-		//TODO : faire la même choses pour les colonnes
-	    }
+//debug
+                console.log("jeu verifier ligne "+i+this.tableauBloc[i][0] )
+    
+            if(this.tableauBloc[i][0] != 0 ){
+	    
+                var retour = this.tableauBloc[i][0].validerLigne(0);	
+	        }
         }
     }
     

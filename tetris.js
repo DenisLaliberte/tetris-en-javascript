@@ -3,10 +3,10 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
 /*
 todo :
+-validation d'une ligne
 -debuger la fonction qui commence une nouvelle partie
 -clean up commentaire et console.log
 
--faire une branche pour dr mario
 
 */
 
