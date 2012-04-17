@@ -1,4 +1,3 @@
-
 /* ********** ********** ********** ********** ********** ********** ********** */
                                 //objet jeu
 /* ********** ********** ********** ********** ********** ********** ********** */
@@ -57,7 +56,14 @@ function Jeu(){
 	        }
         }
     }
-    
+    this.calculerPlancher = function(colonne){
+        for(i=10;i<0;i--) {
+            if(this.tableauBloc[i][colonne]){
+                return i ;
+            }
+        }
+        return 0;
+    }    
     this.finPartie = function(){
 //debug :
         console.log("jeu.finpartie()");

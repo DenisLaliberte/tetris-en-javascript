@@ -3,7 +3,7 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
 /*
 todo :
--validation d'une ligne
+-descendre les blocs
 -debuger la fonction qui commence une nouvelle partie
 -clean up commentaire et console.log
 

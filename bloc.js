@@ -78,7 +78,8 @@ if(DEBUG)       console.log("bloc || tic() colonne "+this.colonne)
     	
         //validation arret	
 	//calcul du plancher de la colonne que le bloc descend
-	var plancherColonne = PLANCHER -( this.jeu.tableauPlancher[this.colonne]*DIMENSION_BLOC);	
+	var plancherColonne = PLANCHER -(
+        this.jeu.calculerPlancher( this.colonne )*DIMENSION_BLOC);	
 	if( this.y >plancherColonne ){
 	    this.actif = false;
 	    this.jeu.tableauPlancher[this.colonne]+=1;
