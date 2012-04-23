@@ -45,28 +45,38 @@ function Bloc(id,jeu){
 	this.div = document.getElementById(this.idCSS);
     this.tic = function() {
     //fonction qui gere le rythme de l'annimation du bloc
-		
+        
     	if(this.direction!=0){		
-    	//deplacement horizontal
-	    this.xCourant = this.div.offsetLeft;
-            this.nouveauX = this.xCourant +( DIMENSION_BLOC *this.direction);
-			
-	    if(this.nouveauX > LIMITTE_GAUCHE 
-		&& this.nouveauX < LIMITTE_DROITE){
-	        //si le bloc ne sort pas des limites du cadre, modifier la
-                //valeur du x 
-                this.div.style.left = this.nouveauX + "px";
-                this.colonne +=this.direction;
-	        this.calculerPlancher();
-            }
-	}
-	//rotation du bloc
+            this.deplacementHorizontal();
+        }
 	if(this.rotation){
+            this.rotationBloc();    
+	}
+        this.deplacementVerical();	
+    }
+    this.deplacementHorizontal = function(){
+	this.xCourant = this.div.offsetLeft;
+        this.nouveauX = this.xCourant +( DIMENSION_BLOC *this.direction);
+			
+	if(this.nouveauX > LIMITTE_GAUCHE 
+		&& this.nouveauX < LIMITTE_DROITE){
+	    //si le bloc ne sort pas des limites du cadre, modifier la
+            //valeur du x 
+            this.div.style.left = this.nouveauX + "px";
+            this.colonne +=this.direction;
+	    this.calculerPlancher();
+        }
+    }
+
+    this.rotationBloc = function(){
+    
             //TODO : rotation
             console.log("rotation");
             rotation = false ;
-	}
-
+    
+    }
+    this.deplacementVerical = function(){
+    
 	//deplacement vertical
         if(!this.acceleration){
             this.vitesse=1;
@@ -83,9 +93,9 @@ function Bloc(id,jeu){
 	    if((this.nbBlocPlancher +1) > NOMBRE_LIGNE_MAX){
 		gameOver = true;
 	    }
-    	}
-		
+        } 
     }
+
     this.calculerPlancher=function(){
         this.nbBlocPlancher = this.jeu.calculerPlancher(this.colonne);
         this.yPlancher =PLANCHER-(this.nbBlocPlancher*DIMENSION_BLOC);  
