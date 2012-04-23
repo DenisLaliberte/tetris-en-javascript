@@ -4,7 +4,6 @@
 /*
 todo :
 
--gérer l'arret des bloc
 -valider les blocs qui se retirent
 -descendre les blocs après en avoir retiré
 
@@ -24,8 +23,6 @@ window.onload = initialisation;
 function initialisation(){
 //initialisation du jeu et de ses variables
     gameOver = false;    
-//debug :
-        console.log("initialisation")
     //initialisation du jeu
     jeu = new Jeu();
 

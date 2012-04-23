@@ -1,4 +1,3 @@
-
 /* ********** ********** ********** ********** ********** ********** ********** */
                                 //objet bloc
 /* ********** ********** ********** ********** ********** ********** ********** */
@@ -13,7 +12,7 @@ tableauStyle[1] = "vert";
 tableauStyle[2] = "rouge";
 tableauStyle[3] = "jaune";
 var DIMENSION_BLOC = 80; //dimension largeur et hauteur d'un bloc, en px 
-
+var NOMBRE_BLOC_LIGNE = 3 // pour qu'une ligne soit retirer elle doit être
 function Bloc(id,jeu){
 	//initialisation
 	this.actif=true;
@@ -76,8 +75,8 @@ function Bloc(id,jeu){
             this.vitesse=5;
 	}
     	this.y+=this.vitesse;
-	this.div.style.top = this.y + "px";	
     	
+	this.div.style.top = this.y + "px";	
         //validation arret	
 	if( this.y >this.yPlancher ){
 	    this.actif = false;
@@ -90,8 +89,6 @@ function Bloc(id,jeu){
     this.calculerPlancher=function(){
         this.nbBlocPlancher = this.jeu.calculerPlancher(this.colonne);
         this.yPlancher =PLANCHER-(this.nbBlocPlancher*DIMENSION_BLOC);  
-if(DEBUG2) console.log("bloc.js caclulerPlancher C"
-                            +this.colonne+"p"+this.yPlancher);
     }
     this.calculerPlancher();
 
@@ -102,8 +99,8 @@ if(DEBUG2) console.log("bloc.js caclulerPlancher C"
     nombre de bloc à retirer*/
         
         var suivante = this.colonne+1;
-        var nombreARetirer
-        if( this.jeu.tableauBloc[this.ligne][suivante]!= 0){
+        var nombreARetirer;
+        if( this.jeu.tableauBloc[this.ligne][suivante] instanceof Bloc){
 	        compteur++;
                 nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
         }
@@ -118,17 +115,28 @@ if(DEBUG2) console.log("bloc.js caclulerPlancher C"
 		nombreARetirer = compteur+2;
 	}
 	if(nombreARetirer > 0){
-		//on retire le div du html et l'objet du tableau
-                $("#"+this.idCSS).remove();
-		this.jeu.tableauBloc[this.ligne][this.colonne]=0;
-		nombreARetirer--;
-		return nombreARetirer;
+	    //on retire le div du html et l'objet du tableau
+            $("#"+this.idCSS).remove();
+		
+            this.jeu.tableauBloc[this.ligne][this.colonne]=0;
+            if(this.jeu.tableauBloc[this.ligne+1][this.colonne] instanceof Bloc) {
+		this.jeu.tableauBloc[this.ligne+1][this.colonne].descendreBloc();
+            }
+            nombreARetirer--;
+	    return nombreARetirer;
 	}
 	else{
 	 return 0;
 	}
     }
+    this.descendreBloc=function(){
+                
+	this.div.style.top = this.y +DIMENSION_BLOC+ "px";	
+        this.jeu.tableauBloc[this.ligne-1][this.colonne] = this;
+        this.jeu.tableauBloc[this.ligne][this.colonne] = 0;
+        if(this.jeu.tableauBloc[this.ligne+1][this.colonne] instanceof Bloc){
+            this.jeu.talbeauBloc[this.ligne+1][this.colonne].descendreBloc();
+        }
+    }
+
 }
-
-
-
