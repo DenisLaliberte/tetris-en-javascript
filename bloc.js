@@ -26,7 +26,10 @@ function Bloc(id,jeu){
 	this.nouveauX = 0;
         this.colonne =  COLONNE_DEPART ;
         this.ligne = 0;
+        this.nbBlocPlancher = 0;
+        this.yPlancher = 0;
         
+
 	this.vitesse = 1;
         this.direction=0;
         this.rotation = false;
@@ -41,7 +44,6 @@ function Bloc(id,jeu){
 				+"'class='bloc "
 				+this.style+"' ></div>") );
 	this.div = document.getElementById(this.idCSS);
-
     this.tic = function() {
     //fonction qui gere le rythme de l'annimation du bloc
 		
@@ -52,12 +54,12 @@ function Bloc(id,jeu){
 			
 	    if(this.nouveauX > LIMITTE_GAUCHE 
 		&& this.nouveauX < LIMITTE_DROITE){
-		
+	        //si le bloc ne sort pas des limites du cadre, modifier la
+                //valeur du x 
                 this.div.style.left = this.nouveauX + "px";
-
-if(DEBUG)       console.log("bloc || tic() colonne "+this.colonne)
                 this.colonne +=this.direction;
-	    }
+	        this.calculerPlancher();
+            }
 	}
 	//rotation du bloc
 	if(this.rotation){
@@ -77,19 +79,23 @@ if(DEBUG)       console.log("bloc || tic() colonne "+this.colonne)
 	this.div.style.top = this.y + "px";	
     	
         //validation arret	
-	//calcul du plancher de la colonne que le bloc descend
-	var plancherColonne = PLANCHER -(
-        this.jeu.calculerPlancher( this.colonne )*DIMENSION_BLOC);	
-	if( this.y >plancherColonne ){
+	if( this.y >this.yPlancher ){
 	    this.actif = false;
-	    this.jeu.tableauPlancher[this.colonne]+=1;
-	    if(this.jeu.tableauPlancher[this.colonne] > NOMBRE_LIGNE_MAX){
-		console.log("Bloc() validationArret GAMEOVER")
+	    if((this.nbBlocPlancher +1) > NOMBRE_LIGNE_MAX){
 		gameOver = true;
 	    }
     	}
 		
     }
+    this.calculerPlancher=function(){
+        this.nbBlocPlancher = this.jeu.calculerPlancher(this.colonne);
+        this.yPlancher =PLANCHER-(this.nbBlocPlancher*DIMENSION_BLOC);  
+if(DEBUG2) console.log("bloc.js caclulerPlancher C"
+                            +this.colonne+"p"+this.yPlancher);
+    }
+    this.calculerPlancher();
+
+
     this.validerLigne = function(compteur){
     /*valide pour un bloc si les suivants sur la lignes sont de la même couleur
     s'il y en as plus de 3 en ligne ils sont tous retiré. la fonction retourne le
@@ -97,11 +103,6 @@ if(DEBUG)       console.log("bloc || tic() colonne "+this.colonne)
         
         var suivante = this.colonne+1;
         var nombreARetirer
-if(DEBUG){
-        console.log("bloc ||valider compteur"+compteur);
-        console.log("bloc || valider ligne" +this.ligne + this.colonne);
-        console.log("bloc || objet suivant : "+suivante+ this.jeu.tableauBloc[this.ligne][suivante])
-}
         if( this.jeu.tableauBloc[this.ligne][suivante]!= 0){
 	        compteur++;
                 nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
@@ -118,7 +119,6 @@ if(DEBUG){
 	}
 	if(nombreARetirer > 0){
 		//on retire le div du html et l'objet du tableau
-if(DEBUG)   console.log("bloc ||valider ligne nombreARetirer"+nombreARetirer)
                 $("#"+this.idCSS).remove();
 		this.jeu.tableauBloc[this.ligne][this.colonne]=0;
 		nombreARetirer--;

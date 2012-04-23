@@ -3,16 +3,21 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
 /*
 todo :
--descendre les blocs
+
+-gérer l'arret des bloc
+-valider les blocs qui se retirent
+-descendre les blocs après en avoir retiré
+
+-faire des formes complexe
+-faire la rotation
 -debuger la fonction qui commence une nouvelle partie
--clean up commentaire et console.log
 
-
+-branche drMario
 */
 
 //variables
 var gameOver = false ;
-var blocActif = 0 ;
+var blocActifA = 0 ;
 var jeu = 0;
 window.onload = initialisation;
 
@@ -25,7 +30,7 @@ function initialisation(){
     jeu = new Jeu();
 
     //initialisation du premier bloc
-    blocActif =jeu.nouveauBloc();
+    blocActifA =jeu.nouveauBloc();
     
     //debut du jeu :
     tic();
@@ -36,7 +41,7 @@ function initialisation(){
 /* ********** ********** ********** ********** ********** ********** ********** */
 function tic(){
 //tic boucle evnementielle
-	if(!blocActif.actif && !gameOver){
+	if(!blocActifA.actif && !gameOver){
 	/*lorsqu'un bloc as fini de descendre on l'ajoute au tableau
 	 de bloc, on verifie s'il y a des lignes qui se sont complete
 	et on ajoute un nouveau bloc 
@@ -49,10 +54,10 @@ function tic(){
             jeu.verifierLigne();
 	    
             //créer un nouveau bloc
-            blocActif = jeu.nouveauBloc();
+            blocActifA = jeu.nouveauBloc();
 	}
 	if(!gameOver){
-	    blocActif.tic();
+	    blocActifA.tic();
 
 	    //rappel de la fonction a toutes les 30 milisecondes :
 	    setTimeout(tic,30);
@@ -77,12 +82,12 @@ var TOUCHE_HAUT = 38;
 var TOUCHE_BAS = 40; 
 function touche(evenement){
     this.code = evenement.which;
-    if(this.code == TOUCHE_GAUCHE) blocActif.direction = GAUCHE ;
-    else if(this.code == TOUCHE_DROITE) blocActif.direction = DROITE;
-    else if(this.code == TOUCHE_HAUT) blocActif.rotation = true;
-    else if(this.code == TOUCHE_BAS) blocActif.acceleration = true;
+    if(this.code == TOUCHE_GAUCHE) blocActifA.direction = GAUCHE ;
+    else if(this.code == TOUCHE_DROITE) blocActifA.direction = DROITE;
+    else if(this.code == TOUCHE_HAUT) blocActifA.rotation = true;
+    else if(this.code == TOUCHE_BAS) blocActifA.acceleration = true;
 }
 function relache(){
-    blocActif.direction=0;
-    if(blocActif.acceleration)blocActif.acceleration=false;
+    blocActifA.direction=0;
+    if(blocActifA.acceleration)blocActifA.acceleration=false;
 }
