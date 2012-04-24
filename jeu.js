@@ -12,6 +12,7 @@ var NOMBRE_COLONNE = 10;
 function Jeu(){
     this.idBloc = 0;
     this.blocActif;
+    this.structureActive;
 //todo : verifier les array a 2 dimension en js
     this.tableauBloc = new Array(10);
     // TODO: a tester plus tard, je ne suis pas sur s'il faut initialiser un array
@@ -31,7 +32,16 @@ function Jeu(){
         this.idBloc++;
         return this.blocActif;
     }
+    this.nouvelleStructure = function(){
+    //donction pour ajouter une nouvelle structure
+    //todo : choisir au hasard le style de la structure
+        this.structureActive = new Structure(this);
+        return 
     
+    }
+
+
+
     this.ajoutBloc = function() {
     //lorsqu'un bloc a fini sa desente, il est ajoute au tableau des blocs
     //affiche

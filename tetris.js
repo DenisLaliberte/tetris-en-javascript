@@ -4,7 +4,6 @@
 /*
 todo :
 
--valider les blocs qui se retirent
 -descendre les blocs après en avoir retiré
 
 -faire des formes complexe
@@ -27,7 +26,7 @@ function initialisation(){
     jeu = new Jeu();
 
     //initialisation du premier bloc
-    blocActifA =jeu.nouveauBloc();
+    blocActifA =jeu.nouvelleStructure();
     
     //debut du jeu :
     tic();
