@@ -13,14 +13,13 @@ tableauStyle[2] = "rouge";
 tableauStyle[3] = "jaune";
 var DIMENSION_BLOC = 80; //dimension largeur et hauteur d'un bloc, en px 
 var NOMBRE_BLOC_LIGNE = 3 // pour qu'une ligne soit retirer elle doit être
-function Bloc(id,jeu){
+function Bloc(id,structure){
 	//initialisation
-	this.actif=true;
-
+console.log("Bloc.js initialisation "+id)
 	this.id=id;
 	this.idCSS="bloc"+id;
-        this.jeu=jeu;
-
+        this.structure = structure;
+        this.jeu=this.structure.jeu;
 	this.y = 10;
 	this.nouveauX = 0;
         this.colonne =  COLONNE_DEPART ;
@@ -28,16 +27,10 @@ function Bloc(id,jeu){
         this.nbBlocPlancher = 0;
         this.yPlancher = 0;
         
-
 	this.vitesse = 1;
-        this.direction=0;
-        this.rotation = false;
-        this.acceleration = false;
-	
-        this.couleur = Math.round((Math.random() * 3) );
+        this.couleur =structure.couleur; 
         this.style = tableauStyle[this.couleur];
 	
-        
 	//creer le div et en garder une référence
 	$("#jeu").append( $("<div id='"+this.idCSS
 				+"'class='bloc "
@@ -46,14 +39,12 @@ function Bloc(id,jeu){
     this.tic = function() {
     //fonction qui gere le rythme de l'annimation du bloc
         
-    	if(this.direction!=0){		
+    	if(this.structure.direction!=0){		
             this.deplacementHorizontal();
         }
-	if(this.rotation){
-            this.rotationBloc();    
-	}
         this.deplacementVerical();	
     }
+
     this.deplacementHorizontal = function(){
 	this.xCourant = this.div.offsetLeft;
         this.nouveauX = this.xCourant +( DIMENSION_BLOC *this.direction);
@@ -89,7 +80,7 @@ function Bloc(id,jeu){
 	this.div.style.top = this.y + "px";	
         //validation arret	
 	if( this.y >this.yPlancher ){
-	    this.actif = false;
+	    this.structure.actif = false;
 	    if((this.nbBlocPlancher +1) > NOMBRE_LIGNE_MAX){
 		gameOver = true;
 	    }

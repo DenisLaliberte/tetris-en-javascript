@@ -26,28 +26,34 @@ function Jeu(){
 	}
     }
 
-    this.nouveauBloc = function() {
+    this.nouveauBloc = function(structure) {
     //fonction pour ajouter un nouveau bloc au jeu, retourne une reference 
-        this.blocActif = new Bloc(this.idBloc,this);
+        this.blocActif = new Bloc(this.idBloc,structure);
         this.idBloc++;
         return this.blocActif;
     }
     this.nouvelleStructure = function(){
     //donction pour ajouter une nouvelle structure
     //todo : choisir au hasard le style de la structure
-        this.structureActive = new Structure(this);
-        return 
+        this.structureActive = new Structure1(this);
+        return this.structureActive; 
     
     }
+    
+    this.ajouteStructure=function (){
+        console.log("jeu.js ajouteStructure")
+        for (bloc in this.structureActive.blocs){
+            this.ajoutBloc(this.structureActive.blocs[bloc]);
+        }
 
+    }
 
-
-    this.ajoutBloc = function() {
+    this.ajoutBloc = function(bloc) {
     //lorsqu'un bloc a fini sa desente, il est ajoute au tableau des blocs
     //affiche
-        var ligne = this.calculerPlancher(this.blocActif.colonne) + 1;
-        this.blocActif.ligne = ligne;
-        this.tableauBloc[ligne][this.blocActif.colonne] =this.blocActif;
+        var ligne = this.calculerPlancher(bloc.colonne) + 1;
+        bloc.ligne = ligne;
+        this.tableauBloc[ligne][bloc.colonne] =bloc;
         
     }
 

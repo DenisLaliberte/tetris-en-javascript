@@ -42,9 +42,9 @@ function tic(){
 	 de bloc, on verifie s'il y a des lignes qui se sont complete
 	et on ajoute un nouveau bloc 
 	*/
-	
+console.log("tetris.js fin de bloc")	
             //ajouter le bloc au tableau
-	    jeu.ajoutBloc();
+	    jeu.ajouteStructure();
             
             // vérifier s'il y a des lignes qui se sont complété
             jeu.verifierLigne();
