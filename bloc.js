@@ -100,8 +100,10 @@ function Bloc(id,jeu){
         this.nbBlocPlancher = this.jeu.calculerPlancher(this.colonne);
         this.yPlancher =PLANCHER-(this.nbBlocPlancher*DIMENSION_BLOC);  
     }
+    //calculer le plancher une premiere fois lors de l'initialisation de
+    //l'objet :
     this.calculerPlancher();
-
+    
 
     this.validerLigne = function(compteur){
     /*valide pour un bloc si les suivants sur la lignes sont de la même couleur
@@ -120,7 +122,7 @@ function Bloc(id,jeu){
 		return 0;
 	}
 	else{
-	//si on as compté plus de trois bloc de même couleur on incrémente le compteur	
+	//si on as compté un ligne complète on incrémente le compteur	
 	//et on l'assigne aux blos à retirer
 		nombreARetirer = compteur+2;
 	}
