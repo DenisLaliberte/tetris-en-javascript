@@ -2,88 +2,54 @@
 			imitation du jeu tetris en javascript
 /* ********** ********** ********** ********** ********** ********** ********** */
 /*
-todo :
-
--descendre les blocs après en avoir retiré
-
--faire des formes complexe
--faire la rotation
--debuger la fonction qui commence une nouvelle partie
-
--branche drMario
+tetris.js est en charge de l'initialisation de la partie et de la boucle en
+charge de régler le timming du jeu
 */
 
 //variables
-var gameOver = false ;
-var blocActifA = 0 ;
 var jeu = 0;
-window.onload = initialisation;
 
+		//fonction qui initialise le jeu lorsque la page est chargée 
+window.onload = initialisation;
 function initialisation(){
-//initialisation du jeu et de ses variables
-    gameOver = false;    
     //initialisation du jeu
     jeu = new Jeu();
 
     //initialisation du premier bloc
-    blocActifA =jeu.nouvelleStructure();
+    structure =jeu.nouvelleStructure();
     
     //debut du jeu :
     tic();
 }
-
-/* ********** ********** ********** ********** ********** ********** ********** */
 			//boucle qui gere le timming du jeu 
-/* ********** ********** ********** ********** ********** ********** ********** */
 function tic(){
 //tic boucle evnementielle
-	if(!blocActifA.actif && !gameOver){
+
+
+    if(!structure.actif){
 	/*lorsqu'un bloc as fini de descendre on l'ajoute au tableau
 	 de bloc, on verifie s'il y a des lignes qui se sont complete
 	et on ajoute un nouveau bloc 
 	*/
-console.log("tetris.js fin de bloc")	
-            //ajouter le bloc au tableau
+            //ajouter la structure de bloc au tableau de bloc mort
 	    jeu.ajouteStructure();
             
             // vérifier s'il y a des lignes qui se sont complété
             jeu.verifierLigne();
 	    
-            //créer un nouveau bloc
-            blocActifA = jeu.nouveauBloc();
+            //créer une nouvelle structure de bloc 
+            structure = jeu.nouvelleStructure();
 	}
-	if(!gameOver){
-	    blocActifA.tic();
+	if(!jeu.gameOver){
+	    //déclenche le tic de la structure de bloc qui est entrain de
+            //descendre
+            structure.tic();
 
 	    //rappel de la fonction a toutes les 30 milisecondes :
 	    setTimeout(tic,30);
 	}
 	else{
-	    console.log("tic() game over")
             $("#jeu").append( $("<div id='gameOver' >GAME OVER</div>") );
-            setTimeout(jeu.finPartie,10000)
+//            setTimeout(jeu.finPartie,10000)
 	}
-}
-/* ********** ********** ********** ********** ********** ********** ********** */
-				//gestion des evenements
-/* ********** ********** ********** ********** ********** ********** ********** */
-window.onkeyup = relache;
-window.onkeydown = touche;
-//constantes
-var GAUCHE = -1;
-var DROITE = 1;
-var TOUCHE_GAUCHE = 37;
-var TOUCHE_DROITE = 39;
-var TOUCHE_HAUT = 38;
-var TOUCHE_BAS = 40; 
-function touche(evenement){
-    this.code = evenement.which;
-    if(this.code == TOUCHE_GAUCHE) blocActifA.direction = GAUCHE ;
-    else if(this.code == TOUCHE_DROITE) blocActifA.direction = DROITE;
-    else if(this.code == TOUCHE_HAUT) blocActifA.rotation = true;
-    else if(this.code == TOUCHE_BAS) blocActifA.acceleration = true;
-}
-function relache(){
-    blocActifA.direction=0;
-    if(blocActifA.acceleration)blocActifA.acceleration=false;
 }

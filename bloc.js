@@ -1,33 +1,32 @@
 /* ********** ********** ********** ********** ********** ********** ********** */
                                 //objet bloc
 /* ********** ********** ********** ********** ********** ********** ********** */
+
+
+
+//constante
 var BLEU = 0;
 var VERT = 1;
 var ROUGE = 2;
 var JAUNE = 3;
-var COLONNE_DEPART = 4;
 var tableauStyle = new Array();
 tableauStyle[0] = "bleu";
 tableauStyle[1] = "vert";
 tableauStyle[2] = "rouge";
 tableauStyle[3] = "jaune";
-var DIMENSION_BLOC = 80; //dimension largeur et hauteur d'un bloc, en px 
-var NOMBRE_BLOC_LIGNE = 3 // pour qu'une ligne soit retirer elle doit être
+
 function Bloc(id,structure){
 	//initialisation
-console.log("Bloc.js initialisation "+id)
 	this.id=id;
 	this.idCSS="bloc"+id;
         this.structure = structure;
         this.jeu=this.structure.jeu;
 	this.y = 10;
 	this.nouveauX = 0;
-        this.colonne =  COLONNE_DEPART ;
+        this.colonne =  this.jeu.COLONNE_DEPART ;
         this.ligne = 0;
         this.nbBlocPlancher = 0;
-        this.yPlancher = 0;
         
-	this.vitesse = 1;
         this.couleur =structure.couleur; 
         this.style = tableauStyle[this.couleur];
 	
@@ -36,78 +35,67 @@ console.log("Bloc.js initialisation "+id)
 				+"'class='bloc "
 				+this.style+"' ></div>") );
 	this.div = document.getElementById(this.idCSS);
-    this.tic = function() {
-    //fonction qui gere le rythme de l'annimation du bloc
+    
+    
+    
+    this.positionnement=function(structureX,structureY,
+                                positionX,positionY,
+                                ligneStructure,colonneStructure){
+        this.div.style.left =structureX+(positionX * this.jeu.DIMENSION_BLOC);  
+        this.div.style.top =structureY+(positionY * this.jeu.DIMENSION_BLOC);
         
-    	if(this.structure.direction!=0){		
-            this.deplacementHorizontal();
+        //todo : verifier si le x y est bien ligne colonne
+        this.ligne = ligneStructure + positionY;
+        this.colonne = colonneStructure + positionX;
+    
+    }
+
+    this.validationHorizontale = function(direction){
+        valide =true
+        nouvelleColonne = this.colonne+direction;	
+	if(nouvelleColonne < 0 || nouvelleColonne > this.jeu.NOMBRE_COLONNE){
+            //valider qu'on ne sort pas des limittes du jeu
+            valide = false;
         }
-        this.deplacementVerical();	
-    }
-
-    this.deplacementHorizontal = function(){
-	this.xCourant = this.div.offsetLeft;
-        this.nouveauX = this.xCourant +( DIMENSION_BLOC *this.direction);
-			
-	if(this.nouveauX > LIMITTE_GAUCHE 
-		&& this.nouveauX < LIMITTE_DROITE){
-	    //si le bloc ne sort pas des limites du cadre, modifier la
-            //valeur du x 
-            this.div.style.left = this.nouveauX + "px";
-            this.colonne +=this.direction;
-	    this.calculerPlancher();
+        
+        if(this.jeu.verifierBloc(this.ligne,nouvelleColonne)){
+            valide = false;
         }
+        
+        return valide;
     }
 
-    this.rotationBloc = function(){
-    
-            //TODO : rotation
-            console.log("rotation");
-            rotation = false ;
-    
+    this.validationVerticale = function(){
+            valide = true;
+            if (this.jeu.verifierBloc(this.ligne+1,this.colonne)){
+                //valider qu'on ne rentre pas dans un bloc
+	        valide = false;
+	        if(this.ligne==0){
+                    jeu.gameOver = true;
+                }
+            }
+            if(this.ligne+1 ==this.jeu.NOMBRE_LIGNE){
+               //valider qu'on viens d'atteindre le plancher
+                valide = false;
+            
+            }
+            
+        return valide;
     }
-    this.deplacementVerical = function(){
     
-	//deplacement vertical
-        if(!this.acceleration){
-            this.vitesse=1;
-	}
-	else {
-            this.vitesse=5;
-	}
-    	this.y+=this.vitesse;
-    	
-	this.div.style.top = this.y + "px";	
-        //validation arret	
-	if( this.y >this.yPlancher ){
-	    this.structure.actif = false;
-	    if((this.nbBlocPlancher +1) > NOMBRE_LIGNE_MAX){
-		gameOver = true;
-	    }
-        } 
-    }
-
-    this.calculerPlancher=function(){
-        this.nbBlocPlancher = this.jeu.calculerPlancher(this.colonne);
-        this.yPlancher =PLANCHER-(this.nbBlocPlancher*DIMENSION_BLOC);  
-    }
-    //calculer le plancher une premiere fois lors de l'initialisation de
-    //l'objet :
-    this.calculerPlancher();
-    
-
     this.validerLigne = function(compteur){
     /*valide pour un bloc si les suivants sur la lignes sont de la même couleur
     s'il y en as plus de 3 en ligne ils sont tous retiré. la fonction retourne le
     nombre de bloc à retirer*/
-        
+        console.log("valider",this.idCSS);
         var suivante = this.colonne+1;
         var nombreARetirer;
         if( this.jeu.tableauBloc[this.ligne][suivante] instanceof Bloc){
 	        compteur++;
                 nombreARetirer = this.jeu.tableauBloc[this.ligne][suivante].validerLigne(compteur);
+                console.log(nombreARetirer);
         }
-	else if(compteur < NOMBRE_BLOC_LIGNE ){
+	else if(compteur < this.jeu.NOMBRE_BLOC_LIGNE ){
 	//si le bloc suivant n'est pas de la même couleur et qu'on en as compté
 	//moins de 3 on retourne 0 bloc à retirer 
 		return 0;
@@ -122,24 +110,31 @@ console.log("Bloc.js initialisation "+id)
             $("#"+this.idCSS).remove();
 		
             this.jeu.tableauBloc[this.ligne][this.colonne]=0;
-            if(this.jeu.tableauBloc[this.ligne+1][this.colonne] instanceof Bloc) {
-		this.jeu.tableauBloc[this.ligne+1][this.colonne].descendreBloc();
-            }
+            if(this.jeu.tableauBloc[this.ligne-1][this.colonne] instanceof Bloc) {
+		this.jeu.tableauBloc[this.ligne-1][this.colonne].descendreBloc();
+            } 
+            console.log("bloc.validerLigne, nombre a retirer",
+                                nombreARetirer,"bloc x",
+                                this.ligne,"y",this.colonne,"idCss",this.idCSS);
             nombreARetirer--;
-	    return nombreARetirer;
+            return nombreARetirer;
 	}
 	else{
 	 return 0;
 	}
     }
     this.descendreBloc=function(){
-                
-	this.div.style.top = this.y +DIMENSION_BLOC+ "px";	
-        this.jeu.tableauBloc[this.ligne-1][this.colonne] = this;
+                console.log("bloc.descendreBloc()")
+	//todo : a tester
+        this.y =this.div.offsetTop + this.jeu.DIMENSION_BLOC;
+        this.div.style.top = this.y + "px";	
         this.jeu.tableauBloc[this.ligne][this.colonne] = 0;
-        if(this.jeu.tableauBloc[this.ligne+1][this.colonne] instanceof Bloc){
-            this.jeu.talbeauBloc[this.ligne+1][this.colonne].descendreBloc();
+        this.ligne++;
+        this.jeu.tableauBloc[this.ligne][this.colonne] = this;
+        if(this.jeu.tableauBloc[this.ligne-2][this.colonne] instanceof Bloc){
+            this.jeu.tableauBloc[this.ligne-2][this.colonne].descendreBloc();
         }
     }
+
 
 }

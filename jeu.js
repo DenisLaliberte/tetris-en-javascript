@@ -1,83 +1,90 @@
-/* ********** ********** ********** ********** ********** ********** ********** */
-                                //objet jeu
-/* ********** ********** ********** ********** ********** ********** ********** */
+/* ********** ********** ********** ********** ********** ********** ********** 
+                                objet jeu
+
+Objet qui contient tout les éléments du jeu
+ ********** ********** ********** ********** ********** ********** ********** */
+
+//constantes : 
 var DEBUG = true;
-var LIMITTE_GAUCHE =-5;
-var LIMITTE_DROITE =725;
-//TODO : changer la validation pour remmetre 7
-var NOMBRE_LIGNE_MAX = 7;
-var PLANCHER = 520;
-var NOMBRE_COLONNE = 10;
-//complete
+
 function Jeu(){
+    this.LIMITTE_GAUCHE =0;
+    this.NOMBRE_LIGNE =15 ;
+    this.PLANCHER = 520;
+    this.NOMBRE_COLONNE = 12;
+    this.COLONNE_DEPART = 4;
+    this.DIMENSION_BLOC = 40; //dimension largeur et hauteur d'un bloc, en px 
+    //todo verifier NOMBRE_BLOC_LIGNE
+    this.NOMBRE_BLOC_LIGNE = this.NOMBRE_COLONNE-1; // pour qu'une ligne soit retirer elle doit être
     this.idBloc = 0;
-    this.blocActif;
+    this.idStructure = 0;
     this.structureActive;
-//todo : verifier les array a 2 dimension en js
     this.tableauBloc = new Array(10);
-    // TODO: a tester plus tard, je ne suis pas sur s'il faut initialiser un array
-    //mais ça bugais avant que je le fasse
-    for (var i = 0;i<NOMBRE_LIGNE_MAX+1;i++){
+    this.gameOver = false
+    for (var i = 0;i<this.NOMBRE_LIGNE+1;i++){
         this.tableauBloc[i]=new Array(10);
-    	for (var j = 0;j<NOMBRE_COLONNE+1;j++){
+    	for (var j = 0;j<this.NOMBRE_COLONNE+1;j++){
             //on ajoute 1 au nombre de colonne pour grader une colonne vide en
             //dehors du tableau qui sert à la validation des lignes
     		this.tableauBloc[i][j]=0;
 	}
     }
+    
+    
 
     this.nouveauBloc = function(structure) {
     //fonction pour ajouter un nouveau bloc au jeu, retourne une reference 
-        this.blocActif = new Bloc(this.idBloc,structure);
+        blocActif = new Bloc(this.idBloc,structure);
         this.idBloc++;
-        return this.blocActif;
+        return blocActif;
     }
     this.nouvelleStructure = function(){
-    //donction pour ajouter une nouvelle structure
-    //todo : choisir au hasard le style de la structure
-        this.structureActive = new Structure1(this);
+    //fonction pour ajouter une nouvelle structure
+        this.structureActive = new Structure1(this.idStructure,this);
+        this.idStructure++;
         return this.structureActive; 
-    
     }
-    
     this.ajouteStructure=function (){
-        console.log("jeu.js ajouteStructure")
+    //fonction qui ajoute les bloc d'une structure au tableau de bloc mort
         for (bloc in this.structureActive.blocs){
             this.ajoutBloc(this.structureActive.blocs[bloc]);
         }
-
     }
-
     this.ajoutBloc = function(bloc) {
     //lorsqu'un bloc a fini sa desente, il est ajoute au tableau des blocs
-    //affiche
-        var ligne = this.calculerPlancher(bloc.colonne) + 1;
-        bloc.ligne = ligne;
-        this.tableauBloc[ligne][bloc.colonne] =bloc;
+    //mort
+        this.tableauBloc[bloc.ligne][bloc.colonne] =bloc;
         
     }
-
     this.verifierLigne = function() { 
-        for(var i=0;i<NOMBRE_LIGNE_MAX;i++){
-            if(this.tableauBloc[i][0] instanceof Bloc ){	    
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log("jeu.verifierLigne")
+    for(var i=0;i<this.NOMBRE_LIGNE;i++){
+            if(this.tableauBloc[i][0] instanceof Bloc ){
+            console.log("jeu.verifierLigne",i," : valider le bloc",
+                        this.tableauBloc[i][0] )
                 var retour = this.tableauBloc[i][0].validerLigne(0);	
-	    }
-        }
-    }
-
-    this.calculerPlancher = function(colonne){
-        var reponse=0;
-        for(i=NOMBRE_LIGNE_MAX ;i>=0;i--) {
-            if(this.tableauBloc[i][colonne] instanceof Bloc ){
-                reponse=i;
-                break;
             }
         }
+    }
+    this.verifierBloc = function(x,y){
+        reponse = false;
+        if(this.tableauBloc[x][y]instanceof Bloc){
+                reponse = true;
+        }
+        
         return reponse;
-    }    
+    
+    }
+
+    this.descendreBloc = function (){
+        console.log("jeu.descendreBloc")
+    
+    }
+
     this.finPartie = function(){
         //retire tout les blocs a la fin d'une partie
-        for(var i=0;i<NOMBRE_LIGNE_MAX;i++){
+        for(var i=0;i<this.NOMBRE_LIGNE;i++){
 	    for(var j=0;j<10;j++){
                 this.tableauBloc[i][j].retirer();	
 	    }
